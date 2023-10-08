@@ -58,6 +58,26 @@ const addToCart = async(req,res) => {
 const userCartScreen = async(req,res) => {
     try {
         const userId = req.params.userId;
+
+        const userCart = await Cart.find({userId})
+        .populate({
+            path:"userId",
+            model:"User",
+            select:'-__v'
+        })
+        .populate({
+            path:"productId",
+            model:"Product",
+            select:"-__v"
+        });
+
+        if(userCart){
+            return res.status(200).json({
+                status:"Success",
+                length:userCart.length,
+                cart:userCart
+            })
+        }
         
         
     } catch (error) {
