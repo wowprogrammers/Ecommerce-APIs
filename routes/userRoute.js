@@ -4,7 +4,7 @@ import  * as userController from '../controllers/userController.js';
 
 
 userRoute.post('/',userController.signUp);
-
-
+userRoute.get('/:id',userController.getUserById)
+userRoute.put('/:id',userController.updateUser)
 
 export  {userRoute}
