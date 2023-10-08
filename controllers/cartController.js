@@ -24,6 +24,20 @@ const addToCart = async(req,res) => {
             })
         }
 
+        // Check if cart with same userId and productId already added once
+
+        const checkUserCart = await Cart.findOne({userId,productId})
+        if(checkUserCart){
+            checkUserCart.quantity += 1;
+           const cart =  await checkUserCart.save()
+           if(cart){ 
+            return res.status(201).json({
+                status:"success",
+                cart
+            })
+        }
+        }
+
         const cart = await Cart.create({
             userId,
             productId,
