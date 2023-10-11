@@ -51,4 +51,43 @@ const orderOfSpecificUser = async(req,res) => {
     }
 }
 
-export {createOrder,orderOfSpecificUser}
+// FilterObj
+const FilterObj = (obj,...allowedFields) => {
+    // console.log(obj,allowedFields)
+    const newObj = {};
+    Object.keys(obj).forEach(elem => {
+        if(allowedFields.includes(elem)){
+            newObj[elem] = obj[elem]
+        }
+    })
+    return newObj
+}
+
+// Update the order status 
+const orderPlaced = async(req,res) => {
+    try {
+        const orderId = req.params.orderId;
+
+        if(!orderId){
+            return res.status(404).json({Error:"Order with this ID does not exist"});
+        }
+
+        const filterdBody = FilterObj(req.body,'status');
+
+        const updateOrder = await Order.findByIdAndUpdate(orderId,filterdBody,{
+            new:true
+        })
+
+        if(updateOrder){
+            return res.status(200).json({
+                status:"Success",
+                message:"Your Order is Confirmed"
+            })
+        }
+
+    } catch (error) {
+        res.status(400).json({Error:error.message})
+    }
+}
+
+export {createOrder,orderOfSpecificUser,orderPlaced}
